@@ -48,7 +48,54 @@ class _HomeScreenState extends State<HomeScreen> {
       //   ],
       // ),
 
-      
+      body: ValueListenableBuilder<Box<NotesModel>>(
+        valueListenable: Boxes.getData().listenable(),
+        builder: (context, box, _){
+          var data = box.values.toList().cast<NotesModel>();
+          return ListView.builder(
+              itemCount: box.length,
+              itemBuilder: (context,index){
+                return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                data[index].title.toString(),
+                                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+                              ),
+                              Spacer(),
+                              InkWell(
+                                  onTap: (){
+                                    delete(data[index]);
+                                  },
+                                  child: Icon(Icons.delete,color: Colors.red)
+                              ),
+                              SizedBox(width: 15),
+                              InkWell(
+                                  onTap: (){
+                                    _editDialog(data[index],data[index].title.toString(),data[index].description.toString());
+                                  },
+                                  child: Icon(Icons.edit)
+                              ),
+                            ],
+                          ),
+                          Text(
+                            data[index].description.toString(),
+                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300),
+                          ),
+                        ],
+                      ),
+                    )
+                );
+              }
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async{
           _showMyDialog();
